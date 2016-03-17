@@ -6,7 +6,7 @@ class UserTest < ActiveSupport::TestCase
   # end
 
   def setup 
-  	@user = User.new(name: "Example name", email: "user@example.com")
+  	@user = User.new(name: "Example name", email: "user@example.com", password: "foopass", password_confirmation: "foopass")
   end
 
   test "should be valid" do
@@ -48,6 +48,30 @@ class UserTest < ActiveSupport::TestCase
   		@user.email = email
   		assert_not @user.valid?, "#{email.inspect} should not be valid"
   	end
+  end
+
+  test "user email shoud be unique" do
+  	dup_user = @user.dup
+  	@user.save
+  	assert_not dup_user.valid?
+  end
+
+  test "password shoud not be present" do
+  	@user.password = ""
+  	@user.password_confirmation = ""
+  	assert_not @user.valid?
+  end
+
+  test "password shoud not be blank" do
+  	@user.password = " " * 6
+  	@user.password_confirmation = " " * 6
+  	assert_not @user.valid?
+  end
+
+  test "password shoud be at least 6 characters" do
+  	@user.password = "aaaaa"
+  	@user.password_confirmation = "aaaaa"
+  	assert_not @user.valid?
   end
 
 end
