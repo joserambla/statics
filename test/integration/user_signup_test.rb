@@ -16,5 +16,6 @@ class UserSignupTest < ActionDispatch::IntegrationTest
   	after = User.count
   	assert_equal before, after
   	assert_template "users/new"
+    assert_select "div#error_container"
   end
 end
